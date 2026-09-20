@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certificate Generator – Circuit and Soul</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- =================================
+       CONTROLS
+  ================================== -->
+  <section class="controls">
+    <label>
+      Certificate type
+      <select id="type">
+        <option value="debate-winner">Debate – Winner (First Position)</option>
+        <option value="debate-participation">Debate – Participation</option>
+        <option value="engineer-winner">Engineer It! – Winner (First Position)</option>
+        <option value="engineer-participation">Engineer It! – Participation</option>
+      </select>
+    </label>
+
+    <label>
+      Name(s)
+      <textarea id="names" placeholder="Type a name.&#10;For several certificates, put one name per line."></textarea>
+      <span class="hint">One name per line = one certificate (page) per name.</span>
+    </label>
+
+    <button type="button" id="print">Print certificate</button>
+  </section>
+
+  <!-- Certificates are rendered here -->
+  <div id="sheet"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
