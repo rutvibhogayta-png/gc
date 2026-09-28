@@ -25,6 +25,7 @@
       Certificate type
       <select id="type">
         <option value="debate-winner">Debate – Winner (First Position)</option>
+        <option value="debate-runnerup">Debate – Runner-Up (Second Position)</option>
         <option value="debate-participation">Debate – Participation</option>
         <option value="engineer-winner">Engineer It! – Winner (First Position)</option>
         <option value="engineer-participation">Engineer It! – Participation</option>
@@ -38,11 +39,14 @@
     </label>
 
     <button type="button" id="print">Print certificate</button>
+    <button type="button" id="jpg" class="secondary">Save as JPG</button>
   </section>
 
   <!-- Certificates are rendered here -->
   <div id="sheet"></div>
 
+  <script src="lib/html2canvas.min.js"></script>
+  <script src="images-data.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

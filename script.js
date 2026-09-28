@@ -2,10 +2,11 @@
 
 (function () {
   /* ---------- Images (files in the images/ folder) ---------- */
+  const EMBED = window.CERT_IMAGES || {};
   const IMG = {
-    logo: 'images/LOGO.png',
-    swapnila: 'images/swapnila-signature.png',
-    dhaval: 'images/dhaval-signature.png'
+    logo: EMBED.logo || 'images/LOGO.png',
+    swapnila: EMBED.swapnila || 'images/swapnila-signature.png',
+    dhaval: EMBED.dhaval || 'images/dhaval-signature.png'
   };
 
   /* ---------- Certificate content for each type ---------- */
@@ -21,6 +22,15 @@
       topic: TOPIC,
       wishes: 'Your insight, articulation, and thoughtful perspective distinguished your contribution.<br>Congratulations on this well-deserved achievement.',
       label: 'Debate Winner'
+    },
+    'debate-runnerup': {
+      title: 'CIRCUIT AND SOUL',
+      line1: 'has been awarded the <strong>Runner-Up Position</strong> in the debate competition',
+      event: 'Circuit and Soul',
+      series: 'The Mind Behind the Machines',
+      topic: TOPIC,
+      wishes: 'Your clarity of thought, composure, and well-reasoned arguments earned distinction.<br>Congratulations on this commendable achievement.',
+      label: 'Debate Runner-Up'
     },
     'debate-participation': {
       title: 'CIRCUIT AND SOUL',
@@ -169,6 +179,107 @@
       : `Certificates - ${t.label}`;
 
     window.print();
+  });
+
+  /* ---------- Save as JPG ---------- */
+  const jpgBtn = document.getElementById('jpg');
+  const safeName = (s) => s.replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, ' ').trim();
+
+  /* html2canvas cannot draw the flipped SVG corners, so paint them ourselves
+     (behind the captured certificate) and return one flattened canvas. */
+  async function withCorners(captured, certEl) {
+    const svgEl = certEl.querySelector('svg.corner');
+    const markup = new XMLSerializer().serializeToString(svgEl)
+      .replace(/ class="[^"]*"/, '')
+      .replace('<svg', '<svg width="200" height="200"');
+    const img = new Image();
+    await new Promise((res, rej) => {
+      img.onload = res; img.onerror = rej;
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markup);
+    });
+
+    const out = document.createElement('canvas');
+    out.width = captured.width; out.height = captured.height;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#f5f3ee';
+    ctx.fillRect(0, 0, out.width, out.height);
+
+    const k = captured.width / certEl.offsetWidth;   // canvas px per CSS px
+    const size = svgEl.getBoundingClientRect().width / (certEl.getBoundingClientRect().width / certEl.offsetWidth) * k;
+    const b = 2 * k;                                  // certificate border width
+    const W = out.width, H = out.height;
+    const spots = [
+      [b, b, 1, 1], [W - b, b, -1, 1], [b, H - b, 1, -1], [W - b, H - b, -1, -1]
+    ];
+    spots.forEach(([x, y, sx, sy]) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(sx, sy);
+      ctx.drawImage(img, 0, 0, size, size);
+      ctx.restore();
+    });
+
+    ctx.drawImage(captured, 0, 0);
+    return out;
+  }
+
+  jpgBtn.addEventListener('click', async () => {
+    if (typeof html2canvas !== 'function') {
+      alert('JPG export library could not be loaded (lib/html2canvas.min.js).');
+      return;
+    }
+    const names = getNames();
+    if (!names.length && !confirm('No name entered. Save a blank certificate?')) return;
+
+    const label = jpgBtn.textContent;
+    jpgBtn.disabled = true;
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      render();
+      const t = TYPES[typeEl.value];
+      const certs = Array.from(sheet.querySelectorAll('.certificate'));
+
+      for (let i = 0; i < certs.length; i++) {
+        jpgBtn.textContent = certs.length > 1
+          ? `Saving ${i + 1} of ${certs.length}…` : 'Saving…';
+
+        const canvas = await html2canvas(certs[i], {
+          scale: 3,                       // ~3370 x 2380 px (about 300 dpi on A4)
+          backgroundColor: null,          // transparent: corners are drawn underneath below
+          useCORS: true,
+          logging: false,
+          onclone: (doc) => {
+            doc.querySelectorAll('.certificate').forEach(c => {
+              c.style.zoom = '1';
+              c.style.boxShadow = 'none';
+              c.style.background = 'transparent';   // corners are painted underneath
+            });
+            doc.querySelectorAll('.placeholder').forEach(p => p.remove());
+
+            doc.querySelectorAll('svg.corner').forEach(c => { c.style.visibility = 'hidden'; });
+          }
+        });
+
+        const finalCanvas = await withCorners(canvas, certs[i]);
+        const blob = await new Promise(res => finalCanvas.toBlob(res, 'image/jpeg', 0.95));
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = (names.length
+          ? `Certificate - ${t.label} - ${safeName(names[i]) || i + 1}`
+          : `Certificate - ${t.label}`) + '.jpg';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        await new Promise(r => setTimeout(r, 400));   // let the browser start each download
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Sorry, the JPG could not be created. Please try again or use Print → Save as PDF.');
+    } finally {
+      jpgBtn.textContent = label;
+      jpgBtn.disabled = false;
+    }
   });
 
   window.addEventListener('afterprint', () => { document.title = originalTitle; });
