@@ -111,7 +111,7 @@
           </div>
           <div class="sign-line"></div>
           <p class="sign-name">Dhaval Mehta</p>
-          <p class="sign-role">Head CSE</p>
+          <p class="sign-role">Head CSE Programs</p>
         </div>
       </section>
     </div>`;
