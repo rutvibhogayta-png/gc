@@ -17,8 +17,8 @@
     'debate-winner': {
       title: 'CIRCUIT AND SOUL',
       line1: 'has been awarded the <strong>First Position</strong> in the debate competition',
-      event: 'Circuit and Soul',
-      series: 'The Mind Behind the Machines',
+      competition: 'The Mind Behind the Machines',
+      parentEvent: 'Circuit and Soul',
       topic: TOPIC,
       wishes: 'Your insight, articulation, and thoughtful perspective distinguished your contribution.<br>Congratulations on this well-deserved achievement.',
       label: 'Debate Winner'
@@ -26,8 +26,8 @@
     'debate-runnerup': {
       title: 'CIRCUIT AND SOUL',
       line1: 'has been awarded the <strong>Runner-Up Position</strong> in the debate competition',
-      event: 'Circuit and Soul',
-      series: 'The Mind Behind the Machines',
+      competition: 'The Mind Behind the Machines',
+      parentEvent: 'Circuit and Soul',
       topic: TOPIC,
       wishes: 'Your clarity of thought, composure, and well-reasoned arguments earned distinction.<br>Congratulations on this commendable achievement.',
       label: 'Debate Runner-Up'
@@ -35,26 +35,17 @@
     'debate-participation': {
       title: 'CIRCUIT AND SOUL',
       line1: 'has participated in the debate competition',
-      event: 'Circuit and Soul',
-      series: 'The Mind Behind the Machines',
+      competition: 'The Mind Behind the Machines',
+      parentEvent: 'Circuit and Soul',
       topic: TOPIC,
       wishes: 'Your thoughtful perspective, enthusiasm, and participation contributed to the spirit of meaningful dialogue.<br>We appreciate your contribution and wish you continued success.',
       label: 'Debate Participation'
     },
-    'engineer-winner': {
-      title: 'THE CIRCUIT AND SOULS',
-      line1: 'has been awarded the <strong>First Position</strong> in the event',
-      event: 'Engineer It!',
-      series: 'The Circuit and Souls',
-      topic: null,
-      wishes: 'Your creativity, ingenuity, and vision distinguished your contribution.<br>Congratulations on this well-deserved achievement.',
-      label: 'Engineer It Winner'
-    },
     'engineer-participation': {
-      title: 'THE CIRCUIT AND SOULS',
+      title: 'CIRCUIT AND SOUL',
       line1: 'has participated in the event',
-      event: 'Engineer It!',
-      series: 'The Circuit and Souls',
+      competition: 'Engineer It!',
+      parentEvent: 'Circuit and Soul',
       topic: null,
       wishes: 'Your enthusiasm, creativity, and active participation contributed to the spirit of innovation and collaboration.<br>We appreciate your contribution and wish you continued success.',
       label: 'Engineer It Participation'
@@ -95,8 +86,8 @@
         <p class="certify">This is to certify that</p>
         <div class="name-line"></div>
         <p class="line1">${t.line1}</p>
-        <p class="event">${t.event}</p>
-        <p class="series">${t.series}</p>
+        <p class="series">${t.competition}</p>
+        <p class="event">under the event <strong>${t.parentEvent}</strong></p>
         ${topicBlock}
         <p class="held">${HELD}</p>
         <p class="wishes">${t.wishes}</p>
@@ -110,7 +101,7 @@
           </div>
           <div class="sign-line"></div>
           <p class="sign-name">Swapnila Nigam</p>
-          <p class="sign-role">(Convener)</p>
+          <p class="sign-role">Convener</p>
         </div>
 
         <div class="sign-block">
@@ -120,7 +111,7 @@
           </div>
           <div class="sign-line"></div>
           <p class="sign-name">Dhaval Mehta</p>
-          <p class="sign-role">Program Head</p>
+          <p class="sign-role">Head CSE</p>
         </div>
       </section>
     </div>`;
